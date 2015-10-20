@@ -4,10 +4,10 @@ public class AIPlayer implements Runnable{
 	private Random r;
 	private String marker;
 	
-	public AIPlayer(Board b){
+	public AIPlayer(Board b, String marker){
 		this.b = b;
 		r = new Random();
-		marker = "*";
+		this.marker = marker;
 	}
 	
 
@@ -86,20 +86,35 @@ public class AIPlayer implements Runnable{
 		if(!hasMoved && !b.getSquare(2, 2).equals("-") && b.getSquare(0, 2).equals(b.getSquare(2, 2))) hasMoved = b.setBoard(1, 2, marker);
 		if(!hasMoved && !b.getSquare(2, 2).equals("-") && b.getSquare(2, 0).equals(b.getSquare(2, 2))) hasMoved = b.setBoard(2, 1, marker);
 		
-		//else tries to move into random corner or middle
-		int corner = r.nextInt(5);
-		if(corner == 0 && !hasMoved) hasMoved = b.setBoard(0, 0, marker);
-		if(corner == 1 && !hasMoved) hasMoved = b.setBoard(0, 2, marker);
-		if(corner == 2 && !hasMoved) hasMoved = b.setBoard(1, 1, marker);
-		if(corner == 3 && !hasMoved) hasMoved = b.setBoard(2, 0, marker);
-		if(corner == 4 && !hasMoved) hasMoved = b.setBoard(2, 2, marker);
+		//moves to middle
+		if(!hasMoved) hasMoved = b.setBoard(1, 1, marker);
+		
+		//else tries to move into random corner
+		int availableCorners = 0;
+		if(b.getSquare(0, 0).equals("-")) availableCorners ++;
+		if(b.getSquare(0, 2).equals("-")) availableCorners ++;
+		if(b.getSquare(2, 0).equals("-")) availableCorners ++;
+		if(b.getSquare(2, 2).equals("-")) availableCorners ++;
+		
+		while(availableCorners!= 0 && !hasMoved){
+			int corner = r.nextInt(4);
+			if(corner == 0 && !hasMoved) hasMoved = b.setBoard(0, 0, marker);
+			if(corner == 1 && !hasMoved) hasMoved = b.setBoard(0, 2, marker);
+			if(corner == 2 && !hasMoved) hasMoved = b.setBoard(2, 0, marker);
+			if(corner == 3 && !hasMoved) hasMoved = b.setBoard(2, 2, marker);
+		}
+		
+		
 		
 		//else moves to random other square
-		int space = r.nextInt(4);
-		if(space == 0 && !hasMoved) hasMoved = b.setBoard(1, 0, marker);
-		if(space == 1 && !hasMoved) hasMoved = b.setBoard(0, 1, marker);
-		if(space == 2 && !hasMoved) hasMoved = b.setBoard(1, 2, marker);
-		if(space == 3 && !hasMoved) hasMoved = b.setBoard(2, 1, marker);
+		while(!hasMoved){
+			int space = r.nextInt(4);
+			if(space == 0 && !hasMoved) hasMoved = b.setBoard(1, 0, marker);
+			if(space == 1 && !hasMoved) hasMoved = b.setBoard(0, 1, marker);
+			if(space == 2 && !hasMoved) hasMoved = b.setBoard(1, 2, marker);
+			if(space == 3 && !hasMoved) hasMoved = b.setBoard(2, 1, marker);
+		}
+		System.out.println(b);
 	}
 
 }

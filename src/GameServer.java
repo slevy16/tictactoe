@@ -11,10 +11,10 @@ public class GameServer {
     private static int maxConnections = 2;
 
     public static void main(String[] args) {
-    	System.out.println("do you want to play with a robot? (y/n)");
+    	System.out.println("how many robots do you want to play? (0-2)");
     	Scanner s = new Scanner(System.in);
-    	String response = s.nextLine();
-    	if(response.equals("n")){
+    	int response = s.nextInt();
+    	if(response == 0){
     		ServerSocket myServer = null;
     		Socket playerSocket = null;
     		int i = 0;
@@ -58,9 +58,9 @@ public class GameServer {
     			e.printStackTrace();
     		}
     	}
-    	else{
+    	else if(response == 1){
     		Board b = new Board();
-    		AIPlayer ai = new AIPlayer(b);
+    		AIPlayer ai = new AIPlayer(b, "*");
     		System.out.println("robot made");
     		ServerSocket myServer = null;
     		Socket playerSocket = null;
@@ -92,6 +92,24 @@ public class GameServer {
 			}
 			
     	}
+    	else if(response == 2){
+    		Board b = new Board();
+    		AIPlayer robot1 = new AIPlayer(b, "x");
+    		AIPlayer robot2 = new AIPlayer(b, "o");
+    		System.out.println("robot ready");
+			while(!b.isFull()&& !b.isWon()){
+				if(!b.isFull()&& !b.isWon()){
+					robot1.takeTurn();
+				}
+				if(!b.isFull() && !b.isWon()){
+					robot2.takeTurn();
+				}
+			}
+			
+			System.out.println("game over");
+    		
+    	}
+    	else System.out.println("no");
     }
 
 
