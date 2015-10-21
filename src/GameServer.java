@@ -11,7 +11,7 @@ public class GameServer {
     private static int maxConnections = 2;
 
     public static void main(String[] args) {
-    	System.out.println("how many robots do you want to play? (0-2)");
+    	System.out.println("how many tictactoe-bots do you want to play? (0-2)");
     	Scanner s = new Scanner(System.in);
     	int response = s.nextInt();
     	if(response == 0){
@@ -23,7 +23,7 @@ public class GameServer {
 
     		try {
     			myServer = new ServerSocket(port);
-    			System.out.println("Server started");
+    			System.out.println("server started");
     		} catch (IOException e) {
     			System.out.println(e);
     		}
@@ -63,15 +63,15 @@ public class GameServer {
     	}
     	else if(response == 1){
     		Board b = new Board();
-    		System.out.println("enter a difficulty for the robot (1-5): ");
+    		System.out.println("enter a difficulty for the tictactoe-bot (1-5): ");
             int d = s.nextInt();
             AIPlayer ai = new AIPlayer(b , "*" , d);
-    		System.out.println("robot made");
+    		System.out.println("tictactoe-bot made");
     		ServerSocket myServer = null;
     		Socket playerSocket = null;
     		try {
     			myServer = new ServerSocket(port);
-    			System.out.println("Server started");
+    			System.out.println("server started");
     			PlayerConnection player = null;
 				playerSocket = myServer.accept();
 				player = new PlayerConnection(playerSocket, b);
@@ -80,7 +80,7 @@ public class GameServer {
 				System.out.println("got a player");
 				Thread t1 = new Thread(ai);
 				t1.start();
-				System.out.println("robot ready");
+				System.out.println("tictactoe-bot ready");
 				while(!b.isFull()&& !b.isWon()){
     				if(!b.isFull()&& !b.isWon()){
     					player.takeTurn();
@@ -103,9 +103,9 @@ public class GameServer {
     	}
     	else if(response == 2){
     		Board b = new Board();
-    		System.out.println("enter a difficulty for the first robot (1-5): ");
+    		System.out.println("enter a difficulty for the first tictactoe-bot (1-5): ");
             int d = s.nextInt();
-            System.out.println("enter a difficulty for the robot (1-5): ");
+            System.out.println("enter a difficulty for the second tictactoe-bot (1-5): ");
             int d1 = s.nextInt();
     		AIPlayer robot1 = new AIPlayer(b, "x", d);
     		AIPlayer robot2 = new AIPlayer(b, "o", d1);
@@ -118,11 +118,32 @@ public class GameServer {
 					robot2.takeTurn();
 				}
 			}
+			boolean win1 = false;
+			boolean win2 = false;
 			
-			System.out.println("game over");
+			if(b.getSquare(0,0).equals(b.getSquare(0,1)) && b.getSquare(0,1).equals(b.getSquare(0,2)) && b.getSquare(0,0).equals("x")) win1 = true;
+			else if(b.getSquare(1,0).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(1,2)) && b.getSquare(1,0).equals("x")) win1 = true;
+			else if(b.getSquare(2,0).equals(b.getSquare(2,1)) && b.getSquare(2,1).equals(b.getSquare(2,2)) && b.getSquare(2,0).equals("x")) win1 = true;
+			else if(b.getSquare(0,0).equals(b.getSquare(1,0)) && b.getSquare(1,0).equals(b.getSquare(2,0)) && b.getSquare(0,0).equals("x")) win1 = true;
+			else if(b.getSquare(0,1).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(2,1)) && b.getSquare(0,1).equals("x")) win1 = true;
+			else if(b.getSquare(0,2).equals(b.getSquare(1,2)) && b.getSquare(1,2).equals(b.getSquare(2,2)) && b.getSquare(0,2).equals("x")) win1 = true;
+			else if(b.getSquare(0,0).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(2,2)) && b.getSquare(0,0).equals("x")) win1 = true;
+			else if(b.getSquare(0,2).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(2,0)) && b.getSquare(0,2).equals("x")) win1 = true;
+			if(b.getSquare(0,0).equals(b.getSquare(0,1)) && b.getSquare(0,1).equals(b.getSquare(0,2)) && b.getSquare(0,0).equals("o")) win2 = true;
+			else if(b.getSquare(1,0).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(1,2)) && b.getSquare(1,0).equals("o")) win2 = true;
+			else if(b.getSquare(2,0).equals(b.getSquare(2,1)) && b.getSquare(2,1).equals(b.getSquare(2,2)) && b.getSquare(2,0).equals("o")) win2 = true;
+			else if(b.getSquare(0,0).equals(b.getSquare(1,0)) && b.getSquare(1,0).equals(b.getSquare(2,0)) && b.getSquare(0,0).equals("o")) win2 = true;
+			else if(b.getSquare(0,1).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(2,1)) && b.getSquare(0,1).equals("o")) win2 = true;
+			else if(b.getSquare(0,2).equals(b.getSquare(1,2)) && b.getSquare(1,2).equals(b.getSquare(2,2)) && b.getSquare(0,2).equals("o")) win2 = true;
+			else if(b.getSquare(0,0).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(2,2)) && b.getSquare(0,0).equals("o")) win2 = true;
+			else if(b.getSquare(0,2).equals(b.getSquare(1,1)) && b.getSquare(1,1).equals(b.getSquare(2,0)) && b.getSquare(0,2).equals("o")) win2 = true;
+			
+			if(win1) System.out.println("game over, tictactoe-bot 1 won");
+			else if (win2) System.out.println("game over, tictactoe-bot 2 won");
+			else System.out.println("game over, neither tictactoe-bot won");
     		
     	}
-    	else System.out.println("no");
+    	else System.out.println("a maximum of two tictactoe-bots can play, sorry :(");
     }
 
 
