@@ -73,4 +73,9 @@ public class PlayerConnection implements Runnable{
 		
 	}
 
+
+	public void stop() {
+		System.exit(0);
+	}
+
 }

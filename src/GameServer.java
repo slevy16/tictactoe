@@ -53,6 +53,9 @@ public class GameServer {
     			players[0].takeTurn();
     			players[1].takeTurn();
     			System.out.println("game over");
+    			players[0].stop();
+    			players[1].stop();
+    			myServer.close();
             
     		} catch (IOException e) {
     			e.printStackTrace();
@@ -60,7 +63,9 @@ public class GameServer {
     	}
     	else if(response == 1){
     		Board b = new Board();
-    		AIPlayer ai = new AIPlayer(b, "*");
+    		System.out.println("enter a difficulty for the robot (1-5): ");
+            int d = s.nextInt();
+            AIPlayer ai = new AIPlayer(b , "*" , d);
     		System.out.println("robot made");
     		ServerSocket myServer = null;
     		Socket playerSocket = null;
@@ -86,6 +91,10 @@ public class GameServer {
     			}
     			player.takeTurn();
     			System.out.println("game over");
+    			ai.stop();
+    			player.stop();
+    			
+    			myServer.close();
             
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -94,8 +103,12 @@ public class GameServer {
     	}
     	else if(response == 2){
     		Board b = new Board();
-    		AIPlayer robot1 = new AIPlayer(b, "x");
-    		AIPlayer robot2 = new AIPlayer(b, "o");
+    		System.out.println("enter a difficulty for the first robot (1-5): ");
+            int d = s.nextInt();
+            System.out.println("enter a difficulty for the robot (1-5): ");
+            int d1 = s.nextInt();
+    		AIPlayer robot1 = new AIPlayer(b, "x", d);
+    		AIPlayer robot2 = new AIPlayer(b, "o", d1);
     		System.out.println("robot ready");
 			while(!b.isFull()&& !b.isWon()){
 				if(!b.isFull()&& !b.isWon()){
